@@ -13,4 +13,6 @@ class BigQueryConnector:
         self.config = config
 
     def run(self, sql: str) -> list[dict]:
+        job_config = {"location": self.config.location}
+        _ = job_config
         return []
