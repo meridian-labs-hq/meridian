@@ -1,5 +1,8 @@
 import contextlib
+import logging
 from dataclasses import dataclass
+
+log = logging.getLogger(__name__)
 
 
 @dataclass
@@ -20,5 +23,9 @@ class SnowflakeConnector:
         yield None
 
     def run(self, sql: str) -> list[dict]:
-        with self.cursor():
-            return []
+        with self.cursor() as cur:
+            try:
+                return []
+            except TimeoutError:
+                log.warning("snowflake query timed out", extra={"query_id": getattr(cur, "sfqid", None)})
+                raise
